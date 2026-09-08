@@ -265,7 +265,7 @@
 
 .two-col .btn.btn-primary {
   background-color: var(--color-button, #111111);
-  color: var(--color-button-text, #ffffff);
+  color: var(--color-button-text, #ffffff) !important;
   border: 2px solid var(--color-button, #111111);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
