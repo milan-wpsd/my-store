@@ -1,0 +1,391 @@
+{{ 'section-two-column.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #two-col-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% if section.settings.custom_bg_color != blank and section.settings.custom_bg_color != 'rgba(0,0,0,0)' %}
+      background-color: {{ section.settings.custom_bg_color }};
+    {% endif %}
+    {% if section.settings.custom_text_color != blank and section.settings.custom_text_color != 'rgba(0,0,0,0)' %}
+      color: {{ section.settings.custom_text_color }};
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #two-col-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="two-col-{{ section.id }}"
+  class="two-col {{ section.settings.background_color }} {{ section.settings.top_spacing }} {{ section.settings.bottom_spacing }} {{ section.settings.row_order }} {{ section.settings.mobile_order }} {{ section.settings.select_background }} color-{{ section.settings.color_scheme }} gradient"
+  aria-label="{{ section.settings.accessibility_label | default: 'two column content' | escape }}"
+>
+  <div class="container c-w-1350">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="two-col_info d-flex flex-column align-items-lg-start align-items-center ta-lg-l ta-c row-gap-4 mw-550">
+          {%- if section.settings.micro_title != blank -%}
+            <header class="section-header">
+              <h2 class="micro">{{ section.settings.micro_title | escape }}</h2>
+              <h3 class="lvl-2">{{ section.settings.main_title | escape }}</h3>
+            </header>
+          {%- elsif section.settings.main_title != blank -%}
+            <header class="section-header">
+              <h2>{{ section.settings.main_title | escape }}</h2>
+            </header>
+          {%- endif -%}
+
+          {%- if section.settings.section_content != blank -%}
+            <div class="editor-content rte">
+              {{ section.settings.section_content }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.section_cta_label != blank -%}
+            <div class="cta-link">
+              <a
+                class="btn {{ section.settings.section_cta_button_style }}"
+                href="{{ section.settings.section_cta_url | default: '#' }}"
+                {% if section.settings.section_cta_target == '_blank' %}
+                  target="_blank" rel="noopener noreferrer"
+                {% else %}
+                  target="_self"
+                {% endif %}
+                aria-label="{{ section.settings.section_cta_label | escape }}"
+              >
+                {{ section.settings.section_cta_label | escape }}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="two-col_img mw-550">
+          <picture>
+            {%- if section.settings.main_image != blank -%}
+              {{
+                section.settings.main_image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 992px) 550px, (min-width: 750px) calc((100vw - 60px) / 2), calc(100vw - 40px)',
+                  widths: '360, 540, 720, 900, 1080, 1200',
+                  class: 'two-col_image',
+                  alt: section.settings.main_image.alt | default: section.settings.main_title | escape
+              }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg two-col_placeholder' }}
+            {%- endif -%}
+          </picture>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Two Column",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "micro_title",
+      "label": "Micro Title (Eyebrow)",
+      "default": "Featured Spotlight"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "Modern Crafted Quality"
+    },
+    {
+      "type": "richtext",
+      "id": "section_content",
+      "label": "Section Content",
+      "default": "<p>Share your brand story, highlight exceptional materials, or showcase key features that set your products apart from the rest.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action Button"
+    },
+    {
+      "type": "text",
+      "id": "section_cta_label",
+      "label": "Button Label",
+      "default": "Discover Collection"
+    },
+    {
+      "type": "url",
+      "id": "section_cta_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "section_cta_target",
+      "label": "Button Target",
+      "options": [
+        {
+          "value": "_self",
+          "label": "Same tab"
+        },
+        {
+          "value": "_blank",
+          "label": "New tab"
+        }
+      ],
+      "default": "_self"
+    },
+    {
+      "type": "select",
+      "id": "section_cta_button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "value": "btn-primary",
+          "label": "Primary (Solid)"
+        },
+        {
+          "value": "btn-secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn-outline",
+          "label": "Outline"
+        },
+        {
+          "value": "btn-link",
+          "label": "Link style"
+        }
+      ],
+      "default": "btn-primary"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Alignment"
+    },
+    {
+      "type": "select",
+      "id": "row_order",
+      "label": "Desktop Column Order",
+      "options": [
+        {
+          "value": "",
+          "label": "Text first, Image second"
+        },
+        {
+          "value": "row-reverse",
+          "label": "Image first, Text second"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "mobile_order",
+      "label": "Mobile Layout Order",
+      "options": [
+        {
+          "value": "",
+          "label": "Text first (Default)"
+        },
+        {
+          "value": "mobile-image-first",
+          "label": "Image first"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "Styling & Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Preset Background Class",
+      "options": [
+        {
+          "value": "",
+          "label": "None (Theme Default)"
+        },
+        {
+          "value": "bg-white",
+          "label": "White"
+        },
+        {
+          "value": "bg-light",
+          "label": "Light Gray"
+        },
+        {
+          "value": "bg-dark",
+          "label": "Dark"
+        },
+        {
+          "value": "bg-accent",
+          "label": "Accent Tint"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom Background Color"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "Custom Text Color"
+    },
+    {
+      "type": "text",
+      "id": "select_background",
+      "label": "Additional Background Class",
+      "info": "Optional custom CSS class added to the section wrapper"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "top_spacing",
+      "label": "Top Spacing Class (Optional)",
+      "options": [
+        {
+          "value": "",
+          "label": "Default (Uses Slider)"
+        },
+        {
+          "value": "pt-none",
+          "label": "None (0px)"
+        },
+        {
+          "value": "pt-sm",
+          "label": "Small (30px)"
+        },
+        {
+          "value": "pt-md",
+          "label": "Medium (60px)"
+        },
+        {
+          "value": "pt-lg",
+          "label": "Large (90px)"
+        },
+        {
+          "value": "pt-xl",
+          "label": "Extra Large (120px)"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing Class (Optional)",
+      "options": [
+        {
+          "value": "",
+          "label": "Default (Uses Slider)"
+        },
+        {
+          "value": "pb-none",
+          "label": "None (0px)"
+        },
+        {
+          "value": "pb-sm",
+          "label": "Small (30px)"
+        },
+        {
+          "value": "pb-md",
+          "label": "Medium (60px)"
+        },
+        {
+          "value": "pb-lg",
+          "label": "Large (90px)"
+        },
+        {
+          "value": "pb-xl",
+          "label": "Extra Large (120px)"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Section Accessibility Label",
+      "default": "two column content"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Two Column",
+      "settings": {
+        "micro_title": "Featured Spotlight",
+        "main_title": "Modern Crafted Quality",
+        "section_content": "<p>Share your brand story, highlight exceptional materials, or showcase key features that set your products apart from the rest.</p>",
+        "section_cta_label": "Discover Collection",
+        "section_cta_button_style": "btn-primary",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  ]
+}
+{% endschema %}
