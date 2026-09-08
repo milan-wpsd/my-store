@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 84" fill="none">
+  <path d="M42 4C62.9868 4 80 21.0132 80 42C80 62.9868 62.9868 80 42 80C21.0132 80 4 62.9868 4 42C4 21.0132 21.0132 4 42 4Z" fill="currentColor" fill-opacity="0.08"/>
+  <path d="M58 8C72 18 78 35 74 52C70 69 56 80 39 78C22 76 8 63 6 46C4 29 15 14 32 9C40 6.5 50 5 58 8Z" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" stroke-opacity="0.25"/>
+  <circle cx="72" cy="18" r="4" fill="currentColor" fill-opacity="0.4"/>
+</svg>

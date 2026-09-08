@@ -1,0 +1,338 @@
+{{ 'section-process.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'section-process.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  #process-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% if section.settings.custom_bg_color != blank and section.settings.custom_bg_color != 'rgba(0,0,0,0)' %}
+      background-color: {{ section.settings.custom_bg_color }};
+    {% endif %}
+    {% if section.settings.custom_text_color != blank and section.settings.custom_text_color != 'rgba(0,0,0,0)' %}
+      color: {{ section.settings.custom_text_color }};
+    {% endif %}
+    {% if section.settings.timeline_line_color != blank and section.settings.timeline_line_color != 'rgba(0,0,0,0)' %}
+      --timeline-line-color: {{ section.settings.timeline_line_color }};
+    {% endif %}
+    {% if section.settings.timeline_dot_color != blank and section.settings.timeline_dot_color != 'rgba(0,0,0,0)' %}
+      --timeline-dot-color: {{ section.settings.timeline_dot_color }};
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #process-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="process-{{ section.id }}"
+  class="section-process {{ section.settings.pattern }} {{ section.settings.top_spacing }} color-{{ section.settings.color_scheme }} gradient"
+  aria-label="{{ section.settings.accessibility_label | default: 'process section' | escape }}"
+>
+  {%- if section.settings.micro_title != blank or section.settings.main_title != blank -%}
+    <div class="container">
+      <div class="section-header ta-c pb-sm">
+        {%- if section.settings.micro_title != blank -%}
+          <h2 class="micro">{{ section.settings.micro_title | escape }}</h2>
+          {%- if section.settings.main_title != blank -%}
+            <h3 class="lvl-2">{{ section.settings.main_title | escape }}</h3>
+          {%- endif -%}
+        {%- elsif section.settings.main_title != blank -%}
+          <h2 class="lvl-2">{{ section.settings.main_title | escape }}</h2>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="process_slider_wrapper pos-rel {{ section.settings.bottom_spacing }}">
+    <div class="container">
+      <div class="process-content">
+        {%- if section.blocks.size > 0 -%}
+          <div class="process-slider">
+            {%- for block in section.blocks -%}
+              {%- if block.settings.title != blank -%}
+                <div class="process-item{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+                  <div class="process-block ta-c">
+                    <div class="process-img d-flex flex-column">
+                      <picture>
+                        {%- if block.settings.icon != blank -%}
+                          {{
+                            block.settings.icon
+                            | image_url: width: 200
+                            | image_tag:
+                              loading: 'lazy',
+                              class: 'process-icon-img',
+                              alt: block.settings.title | escape
+                          }}
+                        {%- else -%}
+                          <div class="process-icon-placeholder">{{ forloop.index }}</div>
+                        {%- endif -%}
+                      </picture>
+                    </div>
+
+                    <div class="process-content d-flex flex-column align-items-center row-gap-4">
+                      <div class="title-wrapper">
+                        {%- if block.settings.label != blank -%}
+                          <h5 class="process-label c-2 mb-2">{{ block.settings.label | escape }}</h5>
+                        {%- endif -%}
+                        <h4 class="lvl-3">{{ block.settings.title | escape }}</h4>
+                      </div>
+
+                      {%- if block.settings.info != blank -%}
+                        <div class="content-editor">
+                          <p>{{ block.settings.info | escape }}</p>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Process Slider",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Titles"
+    },
+    {
+      "type": "text",
+      "id": "micro_title",
+      "label": "Micro Title (Eyebrow)",
+      "default": "How It Works"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "Our Proven Step-by-Step Process"
+    },
+    {
+      "type": "header",
+      "content": "Timeline Colors & Styling"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "timeline_line_color",
+      "label": "Timeline Connector Line Color"
+    },
+    {
+      "type": "color",
+      "id": "timeline_dot_color",
+      "label": "Timeline Dot Color"
+    },
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom Background Color"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "Custom Text Color"
+    },
+    {
+      "type": "text",
+      "id": "pattern",
+      "label": "Pattern Class (Optional)",
+      "info": "Optional CSS class name for decorative background pattern"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "top_spacing",
+      "label": "Top Spacing Class (Optional)",
+      "options": [
+        {
+          "value": "",
+          "label": "Default (Uses Slider)"
+        },
+        {
+          "value": "pt-none",
+          "label": "None (0px)"
+        },
+        {
+          "value": "pt-sm",
+          "label": "Small (30px)"
+        },
+        {
+          "value": "pt-md",
+          "label": "Medium (60px)"
+        },
+        {
+          "value": "pt-lg",
+          "label": "Large (90px)"
+        },
+        {
+          "value": "pt-xl",
+          "label": "Extra Large (120px)"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing Class (Optional)",
+      "options": [
+        {
+          "value": "",
+          "label": "Default (Uses Slider)"
+        },
+        {
+          "value": "pb-none",
+          "label": "None (0px)"
+        },
+        {
+          "value": "pb-sm",
+          "label": "Small (30px)"
+        },
+        {
+          "value": "pb-md",
+          "label": "Medium (60px)"
+        },
+        {
+          "value": "pb-lg",
+          "label": "Large (90px)"
+        },
+        {
+          "value": "pb-xl",
+          "label": "Extra Large (120px)"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Section Accessibility Label",
+      "default": "process section"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "process_step",
+      "name": "Process Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Step Icon"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Step Label",
+          "default": "Step 01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title",
+          "default": "Consultation & Discovery"
+        },
+        {
+          "type": "textarea",
+          "id": "info",
+          "label": "Step Information",
+          "default": "We begin by understanding your vision, requirements, and key objectives to tailor the ideal roadmap."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process Slider",
+      "settings": {
+        "micro_title": "How It Works",
+        "main_title": "Our Proven Step-by-Step Process",
+        "padding_top": 60,
+        "padding_bottom": 60
+      },
+      "blocks": [
+        {
+          "type": "process_step",
+          "settings": {
+            "label": "Step 01",
+            "title": "Discovery & Planning",
+            "info": "We analyze your exact requirements, define objectives, and create a comprehensive project strategy."
+          }
+        },
+        {
+          "type": "process_step",
+          "settings": {
+            "label": "Step 02",
+            "title": "Design & Prototyping",
+            "info": "Crafting polished designs with intuitive user experience and brand-aligned visual architecture."
+          }
+        },
+        {
+          "type": "process_step",
+          "settings": {
+            "label": "Step 03",
+            "title": "Development & Build",
+            "info": "Writing clean, high-performance code adhering to industry standards and modern best practices."
+          }
+        },
+        {
+          "type": "process_step",
+          "settings": {
+            "label": "Step 04",
+            "title": "Review & Launch",
+            "info": "Rigorous quality assurance, testing across devices, and seamless deployment to your live store."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

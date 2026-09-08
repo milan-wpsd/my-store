@@ -329,7 +329,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border-radius: var(--media-radius, 12px);
+  border-radius: 12px;
 }
 
 .two-col .two-col_img .two-col_image,
@@ -338,7 +338,7 @@
   width: 100%;
   height: auto;
   object-fit: cover;
-  border-radius: var(--media-radius, 12px);
+  border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   transition: transform 0.4s ease;
 }
@@ -352,7 +352,7 @@
   width: 100%;
   height: 400px;
   background-color: rgba(0, 0, 0, 0.04);
-  border-radius: var(--media-radius, 12px);
+  border-radius: 12px;
   display: block;
 }
 
