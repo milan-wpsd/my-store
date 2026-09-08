@@ -119,16 +119,6 @@ footer.site-footer .col-lg-7 {
   }
 }
 
-footer.site-footer .align-items-center { align-items: center; }
-footer.site-footer .align-items-start { align-items: flex-start; }
-footer.site-footer .justify-content-center { justify-content: center; }
-footer.site-footer .justify-content-between { justify-content: space-between; }
-footer.site-footer .d-flex { display: flex; }
-footer.site-footer .flex-column { flex-direction: column; }
-footer.site-footer .ta-c { text-align: center; }
-footer.site-footer .mx-auto { margin-left: auto; margin-right: auto; }
-footer.site-footer .col-auto { flex: 0 0 auto; width: auto; max-width: 100%; padding: 0 1.5rem; }
-
 /* Spacing & Gap Helpers */
 footer.site-footer .row-gap-36 { row-gap: 36px; }
 footer.site-footer .row-gap-4 { row-gap: 24px; }
@@ -148,18 +138,6 @@ footer.site-footer .footer-main {
   footer.site-footer .footer-main {
     padding: 96px 0;
   }
-}
-
-footer.site-footer .footer-main::before {
-  content: "";
-  position: absolute;
-  top: 40px;
-  right: 30px;
-  width: 110px;
-  height: 60px;
-  background: url("footer-bird-dark.svg") no-repeat center center;
-  background-size: contain;
-  pointer-events: none;
 }
 
 footer.site-footer .footer-logo_main .footer-logo-link {

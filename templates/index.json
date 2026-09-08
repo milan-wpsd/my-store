@@ -9,62 +9,71 @@
  */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero_main_hLCyjR": {
+      "type": "hero-main",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "social_rating_UtmdBN": {
+          "type": "social_rating",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "rating_number": "4.9/5",
+            "rating_description": "from 1,200+ customer reviews"
           }
         },
-        "button": {
-          "type": "buttons",
+        "highlight_FtJDnF": {
+          "type": "highlight",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "title": "Free Worldwide Delivery"
+          }
+        },
+        "highlight_UhrzMq": {
+          "type": "highlight",
+          "settings": {
+            "title": "30-Day Money-Back Guarantee"
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "social_rating_UtmdBN",
+        "highlight_FtJDnF",
+        "highlight_UhrzMq"
       ],
+      "name": "Hero Main",
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "hero_micro_title": "Welcome to Our Store",
+        "hero_main_title": "Modern Craftsmanship Designed for You",
+        "hero_content": "<p>Discover thoughtfully designed collections made from premium materials and built to elevate your daily routine.</p>",
+        "hero_cta_title": "Shop the Collection",
+        "hero_cta_url": "",
+        "hero_cta_target": "_self",
+        "hero_cta_link_style": "btn-outline",
+        "hero_image": "shopify://shop_images/residential-roof-in-process-top-view.webp",
+        "hero_video": "shopify://files/videos/wrightsville-beach-wilmington-nc.mp4",
+        "hero_video_url": "",
+        "overlay_color": "#163c4e",
+        "overlay_opacity": 60,
+        "text_color": "#ffffff",
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#121212",
+        "social_bg_color": "#163c4e",
+        "accessibility_label": "page introduction"
       }
     },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
+        "collection": "all",
+        "products_to_show": 8,
         "title": "Featured products",
         "heading_size": "h2",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "all",
-        "products_to_show": 8,
         "columns_desktop": 4,
-        "color_scheme": "scheme-1",
+        "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "swipe_on_mobile": false,
+        "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
         "show_secondary_image": true,
@@ -72,13 +81,14 @@
         "show_rating": false,
         "quick_add": "none",
         "columns_mobile": "2",
+        "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36
       }
     }
   },
   "order": [
-    "image_banner",
+    "hero_main_hLCyjR",
     "featured_collection"
   ]
 }
