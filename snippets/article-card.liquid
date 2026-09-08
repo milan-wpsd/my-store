@@ -9,6 +9,7 @@
   - show_image: {String} The setting either show the article image or not. If it's not included it will show the image by default
   - show_date: {String} The setting either show the article date or not. If it's not included it will not show the image by default
   - show_author: {String} The setting either show the article author or not. If it's not included it will not show the author by default
+  - show_read_time: {Boolean} The setting either show the article read time or not.
   - show_badge: {String} The setting either show the blog badge or not.
   - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
 
@@ -85,7 +86,10 @@
                 <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
               {%- endif -%}
               {%- if show_author -%}
-                <span>{{ article.author }}</span>
+                <span class="circle-divider">{{ article.author }}</span>
+              {%- endif -%}
+              {%- if show_read_time -%}
+                <span class="circle-divider">{% render 'article-read-time', article: article %}</span>
               {%- endif -%}
             </div>
             {%- if show_excerpt -%}
@@ -124,7 +128,10 @@
               <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
             {%- endif -%}
             {%- if show_author -%}
-              <span>{{ article.author }}</span>
+              <span class="circle-divider">{{ article.author }}</span>
+            {%- endif -%}
+            {%- if show_read_time -%}
+              <span class="circle-divider">{% render 'article-read-time', article: article %}</span>
             {%- endif -%}
           </div>
           {%- if show_excerpt -%}

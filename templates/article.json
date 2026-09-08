@@ -15,14 +15,15 @@
         "featured_image": {
           "type": "featured_image",
           "settings": {
-            "image_height": "adapt"
+            "image_height": "medium"
           }
         },
         "title": {
           "type": "title",
           "settings": {
             "blog_show_date": true,
-            "blog_show_author": false
+            "blog_show_author": true,
+            "blog_show_read_time": true
           }
         },
         "share": {

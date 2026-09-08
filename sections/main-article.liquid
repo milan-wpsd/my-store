@@ -57,11 +57,26 @@
             </span>
           {%- endif -%}
           {%- if block.settings.blog_show_author -%}
-            <span class="caption-with-letter-spacing">
+            <span class="circle-divider caption-with-letter-spacing">
               <span>{{ article.author }}</span>
             </span>
           {%- endif -%}
+          {%- if block.settings.blog_show_read_time -%}
+            <span class="circle-divider caption-with-letter-spacing">
+              {%- render 'article-read-time', article: article -%}
+            </span>
+          {%- endif -%}
         </header>
+
+      {%- when 'reading_time' -%}
+        <div
+          class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="article-template__reading-time caption-with-letter-spacing">
+            {%- render 'article-read-time', article: article, show_icon: block.settings.show_icon -%}
+          </div>
+        </div>
 
       {%- when 'content' -%}
         <div
@@ -348,6 +363,25 @@
           "id": "blog_show_author",
           "default": false,
           "label": "t:sections.main-article.blocks.title.settings.blog_show_author.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_read_time",
+          "default": true,
+          "label": "Show read time"
+        }
+      ]
+    },
+    {
+      "type": "reading_time",
+      "name": "Reading time",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "default": true,
+          "label": "Show clock icon"
         }
       ]
     },

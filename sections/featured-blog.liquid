@@ -75,6 +75,7 @@
                 show_image: section.settings.show_image,
                 show_date: section.settings.show_date,
                 show_author: section.settings.show_author,
+                show_read_time: section.settings.show_read_time,
                 show_excerpt: true
               %}
             </li>
@@ -287,6 +288,12 @@
       "id": "show_author",
       "default": false,
       "label": "t:sections.featured-blog.settings.show_author.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_read_time",
+      "default": true,
+      "label": "Show read time"
     },
     {
       "type": "color_scheme",

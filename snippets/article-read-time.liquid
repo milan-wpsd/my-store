@@ -1,0 +1,41 @@
+{% comment %}
+  Renders estimated reading time for an article.
+  Accepts:
+  - article: {Object} Article Liquid object
+  - show_icon: {Boolean} Whether to show the stopwatch icon (optional)
+  - words_per_minute: {Number} Reading speed in words per minute (optional, default: 200)
+
+  Custom Field (Metafield) Override:
+  - Supports custom reading time set via metafield:
+    `article.metafields.custom.reading_time` or `article.metafields.custom.read_time`
+  - If no custom metafield is set, reading time is automatically calculated based on article content word count.
+
+  Usage:
+  {% render 'article-read-time', article: article %}
+  {% render 'article-read-time', article: article, show_icon: true %}
+{% endcomment %}
+
+{%- liquid
+  assign wpm = words_per_minute | default: 200.0
+  assign custom_read_time = article.metafields.custom.read_time.value | default: article.metafields.custom.read_time | default: article.metafields.custom.reading_time.value | default: article.metafields.custom.reading_time
+
+  if custom_read_time != blank
+    assign custom_read_str = custom_read_time | strip
+    if custom_read_str contains 'min' or custom_read_str contains 'Min'
+      assign read_time_output = custom_read_str
+    else
+      assign read_time_output = custom_read_str | append: ' min read'
+    endif
+  else
+    assign words = article.content | strip_html | split: ' ' | size
+    assign read_minutes = words | divided_by: wpm | ceil | at_least: 1
+    assign read_time_output = read_minutes | append: ' min read'
+  endif
+-%}
+
+{%- if show_icon -%}
+  <span class="svg-wrapper reading-time__icon" aria-hidden="true">
+    {{- 'icon-stopwatch.svg' | inline_asset_content -}}
+  </span>
+{%- endif -%}
+<span class="reading-time__text">{{ read_time_output }}</span>
