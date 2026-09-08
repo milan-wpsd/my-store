@@ -2729,7 +2729,7 @@ details[open] .modal-overlay::after {
   }
 }
 .social-ratings .social__items .social__item picture {
-  margin-right: -18px;
+  margin-right: 0;
   position: relative;
   z-index: 1;
   flex: 0 0 40px;
@@ -2756,7 +2756,7 @@ details[open] .modal-overlay::after {
 }
 @media only screen and (min-width: 575px) {
   .social-ratings .social__items .social__item__desc {
-    margin-left: -24px;
+    margin-left: -54px;
     padding: 10px 17px 10px 50px;
   }
 }

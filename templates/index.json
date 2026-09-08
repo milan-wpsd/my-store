@@ -15,6 +15,10 @@
         "social_rating_UtmdBN": {
           "type": "social_rating",
           "settings": {
+            "headshot_1": "shopify://shop_images/unnamed-2.png",
+            "headshot_2": "shopify://shop_images/unnamed-5.png",
+            "headshot_3": "shopify://shop_images/unnamed-4.png",
+            "social_icon": "shopify://shop_images/Google-logo-color.svg",
             "rating_number": "4.9/5",
             "rating_description": "from 1,200+ customer reviews"
           }
