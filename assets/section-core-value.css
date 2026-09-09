@@ -1,0 +1,94 @@
+.core-value .container {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.core-value .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.core-value .section-header.ta-c {
+    text-align: center;
+    align-items: center;
+}
+
+.core-value .section-header .micro {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 0;
+    color: inherit;
+    opacity: 0.8;
+    line-height: 1.3;
+}
+
+.core-value .section-header h2 {
+    font-size: clamp(2.4rem, 3.5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: inherit;
+    word-break: break-word;
+}
+
+.core-value-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.core-value-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+    padding: 0 15px;
+}
+
+.core-value-item-icon {
+    margin-bottom: 16px;
+}
+
+.core-value-item-icon img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    object-position: center center;
+}
+
+.core-value-item-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.core-value-item-description {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@media screen and (max-width: 749px) {
+    .core-value .section-header {
+        margin-bottom: 28px;
+    }
+
+    .core-value-grid {
+        gap: 24px;
+    }
+
+    .core-value-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,671 @@
+{{ 'section-request-appointment.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #request-appointment-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% if section.settings.custom_bg_color != blank and section.settings.custom_bg_color != 'rgba(0,0,0,0)' %}
+      background-color: {{ section.settings.custom_bg_color }};
+    {% endif %}
+    {% if section.settings.custom_text_color != blank and section.settings.custom_text_color != 'rgba(0,0,0,0)' %}
+      color: {{ section.settings.custom_text_color }};
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #request-appointment-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section
+  id="request-appointment-{{ section.id }}"
+  class="request-appointment {{ section.settings.background_color }} {{ section.settings.text_color }} color-{{ section.settings.color_scheme }} gradient"
+  aria-label="{{ section.settings.heading | default: 'Request An Appointment' | escape }}"
+>
+  <div class="container c-w-1350">
+    {%- if section.settings.micro_title != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+      <header class="section-header ta-c">
+        {%- if section.settings.micro_title != blank -%}
+          <p class="micro">{{ section.settings.micro_title | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lvl-2">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <div class="section-header-description rte">
+            {{ section.settings.subheading }}
+          </div>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="appointment-form-wrapper">
+      {%- form 'contact', id: 'RequestAppointmentForm', class: 'appointment-form' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="form-status form-status--success" tabindex="-1" autofocus role="status">
+            <svg class="form-status-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <h3 class="form-status__title">{{ section.settings.success_heading | default: 'Request Received!' }}</h3>
+              <p class="form-status__message">{{ section.settings.success_message | default: 'Thank you! Your appointment request has been submitted. Our team will contact you shortly to confirm your booking.' }}</p>
+            </div>
+          </div>
+        {%- elsif form.errors -%}
+          <div class="form-status form-status--error" tabindex="-1" autofocus role="alert">
+            <svg class="form-status-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <h3 class="form-status__title">Please correct the following errors:</h3>
+              <ul class="form-status__list">
+                {%- for error in form.errors -%}
+                  <li>{{ error | capitalize }}: {{ form.errors.messages[error] }}</li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <!-- Honeypot Field for Spam Protection -->
+        <input
+          type="text"
+          name="contact[validation_purposes]"
+          id="AppointmentForm-validation"
+          class="appointment-honeypot"
+          tabindex="-1"
+          autocomplete="new-password"
+          aria-hidden="true"
+        >
+
+        <div class="appointment-form-grid">
+          <!-- Name (Required) -->
+          <div class="form-col form-col--full">
+            <label class="form-label" for="AppointmentForm-name">
+              Name <span class="required">(Required)</span>
+            </label>
+            <input
+              type="text"
+              name="contact[Name]"
+              id="AppointmentForm-name"
+              class="appointment-input"
+              placeholder="Name"
+              value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+              required
+              aria-required="true"
+            >
+          </div>
+
+          <!-- Email (Required, Half) -->
+          <div class="form-col form-col--half">
+            <label class="form-label" for="AppointmentForm-email">
+              Email <span class="required">(Required)</span>
+            </label>
+            <input
+              type="email"
+              name="contact[email]"
+              id="AppointmentForm-email"
+              class="appointment-input"
+              placeholder="Email"
+              spellcheck="false"
+              autocapitalize="off"
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+              required
+              aria-required="true"
+            >
+          </div>
+
+          <!-- Phone (Required, Half) -->
+          <div class="form-col form-col--half">
+            <label class="form-label" for="AppointmentForm-phone">
+              Phone <span class="required">(Required)</span>
+            </label>
+            <input
+              type="tel"
+              name="contact[Phone]"
+              id="AppointmentForm-phone"
+              class="appointment-input"
+              placeholder="Phone"
+              value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+              required
+              aria-required="true"
+            >
+          </div>
+
+          <!-- New Or Existing Patient (Required, Full) -->
+          <div class="form-col form-col--full">
+            <fieldset class="form-group">
+              <legend class="form-label">
+                New Or Existing Patient <span class="required">(Required)</span>
+              </legend>
+              <div class="appointment-radio-group">
+                <label class="appointment-radio-option" for="choice_patient_new">
+                  <input
+                    type="radio"
+                    name="contact[Patient Status]"
+                    id="choice_patient_new"
+                    value="New Patient"
+                    checked="checked"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">New Patient</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_patient_existing">
+                  <input
+                    type="radio"
+                    name="contact[Patient Status]"
+                    id="choice_patient_existing"
+                    value="Existing Patients"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Existing Patients</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Select Best Day (Half) -->
+          <div class="form-col form-col--half">
+            <label class="form-label" for="AppointmentForm-day">
+              Select Best Day
+            </label>
+            <div class="appointment-select-wrapper">
+              <select
+                name="contact[Best Day]"
+                id="AppointmentForm-day"
+                class="appointment-select"
+              >
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sundays">Sundays</option>
+                <option value="Statutory Holidays">Statutory Holidays</option>
+              </select>
+              <svg class="appointment-select-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Select Best Time (Half) -->
+          <div class="form-col form-col--half">
+            <label class="form-label" for="AppointmentForm-time">
+              Select Best Time
+            </label>
+            <div class="appointment-select-wrapper">
+              <select
+                name="contact[Best Time]"
+                id="AppointmentForm-time"
+                class="appointment-select"
+              >
+                <option value="Morning (8am - 12pm)">Morning (8am - 12pm)</option>
+                <option value="Afternoon (12pm - 4pm)">Afternoon (12pm - 4pm)</option>
+                <option value="Evening (4pm - 5:30pm)">Evening (4pm - 5:30pm)</option>
+                <option value="By Appointment Only">By Appointment Only</option>
+              </select>
+              <svg class="appointment-select-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Requested Dental Services (Required, Full) -->
+          <div class="form-col form-col--full">
+            <label class="form-label" for="AppointmentForm-service">
+              Requested Dental Services <span class="required">(Required)</span>
+            </label>
+            <div class="appointment-select-wrapper">
+              <select
+                name="contact[Requested Dental Services]"
+                id="AppointmentForm-service"
+                class="appointment-select"
+                required
+                aria-required="true"
+              >
+                <option value="" selected disabled class="gf_placeholder">---Choose One---</option>
+                <option value="General Dentistry">General Dentistry</option>
+                <option value="Porcelain Veneers">Porcelain Veneers</option>
+                <option value="Dental Hygiene & Teeth Cleanings">Dental Hygiene & Teeth Cleanings</option>
+                <option value="Dental Implants">Dental Implants</option>
+                <option value="Dental Crowns">Dental Crowns</option>
+                <option value="Dental Bridges">Dental Bridges</option>
+                <option value="Wisdom Teeth Extractions">Wisdom Teeth Extractions</option>
+                <option value="Children’s Dentistry">Children’s Dentistry</option>
+                <option value="Dental Fillings">Dental Fillings</option>
+                <option value="Other">Other</option>
+              </select>
+              <svg class="appointment-select-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- If Other (Conditional, Full) -->
+          <div class="form-col form-col--full appointment-other-field" id="AppointmentForm-other-container" aria-hidden="true" style="display: none;">
+            <label class="form-label" for="AppointmentForm-other">
+              If Other <span class="required">(Required)</span>
+            </label>
+            <input
+              type="text"
+              name="contact[Other Service Specified]"
+              id="AppointmentForm-other"
+              class="appointment-input"
+              placeholder="Please specify requested dental service"
+              disabled
+            >
+          </div>
+
+          <!-- Confirm By (Required, Third) -->
+          <div class="form-col form-col--third">
+            <fieldset class="form-group">
+              <legend class="form-label">
+                Confirm By <span class="required">(Required)</span>
+              </legend>
+              <div class="appointment-radio-group">
+                <label class="appointment-radio-option" for="choice_confirm_phone">
+                  <input
+                    type="radio"
+                    name="contact[Confirm By]"
+                    id="choice_confirm_phone"
+                    value="Phone"
+                    checked="checked"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Phone</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_confirm_email">
+                  <input
+                    type="radio"
+                    name="contact[Confirm By]"
+                    id="choice_confirm_email"
+                    value="Email"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Email</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_confirm_both">
+                  <input
+                    type="radio"
+                    name="contact[Confirm By]"
+                    id="choice_confirm_both"
+                    value="Both"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Both</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- How did you hear about us? (Required, Two-Thirds) -->
+          <div class="form-col form-col--two-thirds">
+            <fieldset class="form-group">
+              <legend class="form-label">
+                How did you hear about us? <span class="required">(Required)</span>
+              </legend>
+              <div class="appointment-radio-group">
+                <label class="appointment-radio-option" for="choice_source_google">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_google"
+                    value="Google Search"
+                    checked="checked"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Google Search</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_source_facebook">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_facebook"
+                    value="Facebook"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Facebook</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_source_instagram">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_instagram"
+                    value="Instagram"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Instagram</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_source_mailer">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_mailer"
+                    value="Direct Mailer"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Direct Mailer</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_source_referral">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_referral"
+                    value="Referral"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Referral</span>
+                </label>
+                <label class="appointment-radio-option" for="choice_source_other">
+                  <input
+                    type="radio"
+                    name="contact[Referral Source]"
+                    id="choice_source_other"
+                    value="Other"
+                    required
+                  >
+                  <span class="appointment-radio-custom"></span>
+                  <span class="appointment-radio-label">Other</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Message (Required, Full) -->
+          <div class="form-col form-col--full">
+            <label class="form-label" for="AppointmentForm-message">
+              Message <span class="required">(Required)</span>
+            </label>
+            <textarea
+              name="contact[body]"
+              id="AppointmentForm-message"
+              class="appointment-textarea"
+              rows="6"
+              placeholder="Message"
+              required
+              aria-required="true"
+            >{{- form.body -}}</textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-col form-col--full">
+            <div class="appointment-form-actions">
+              <button
+                type="submit"
+                class="btn btn-primary appointment-submit-btn"
+                id="AppointmentForm-submit"
+              >
+                {{ section.settings.button_label | default: 'Request Appointment' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('RequestAppointmentForm');
+    if (!form) return;
+
+    // 1. Phone number auto-formatting: (999) 999-9999
+    var phoneInput = document.getElementById('AppointmentForm-phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', function (e) {
+        var val = e.target.value.replace(/\D/g, '');
+        if (val.length > 10) val = val.substring(0, 10);
+        var formatted = '';
+        if (val.length === 0) {
+          formatted = '';
+        } else if (val.length <= 3) {
+          formatted = '(' + val;
+        } else if (val.length <= 6) {
+          formatted = '(' + val.substring(0, 3) + ') ' + val.substring(3);
+        } else {
+          formatted = '(' + val.substring(0, 3) + ') ' + val.substring(3, 6) + '-' + val.substring(6, 10);
+        }
+        e.target.value = formatted;
+      });
+    }
+
+    // 2. Conditional Logic: "If Other" field on Requested Dental Services
+    var serviceSelect = document.getElementById('AppointmentForm-service');
+    var otherContainer = document.getElementById('AppointmentForm-other-container');
+    var otherInput = document.getElementById('AppointmentForm-other');
+
+    function toggleOtherService() {
+      if (!serviceSelect || !otherContainer || !otherInput) return;
+      if (serviceSelect.value === 'Other') {
+        otherContainer.style.display = 'block';
+        otherContainer.setAttribute('aria-hidden', 'false');
+        otherInput.removeAttribute('disabled');
+        otherInput.setAttribute('required', 'required');
+        otherInput.setAttribute('aria-required', 'true');
+        otherInput.focus();
+      } else {
+        otherContainer.style.display = 'none';
+        otherContainer.setAttribute('aria-hidden', 'true');
+        otherInput.setAttribute('disabled', 'disabled');
+        otherInput.removeAttribute('required');
+        otherInput.removeAttribute('aria-required');
+        otherInput.value = '';
+      }
+    }
+
+    if (serviceSelect) {
+      serviceSelect.addEventListener('change', toggleOtherService);
+      toggleOtherService();
+    }
+
+    // 3. Conditional Logic: Select Best Day -> Select Best Time options
+    var daySelect = document.getElementById('AppointmentForm-day');
+    var timeSelect = document.getElementById('AppointmentForm-time');
+
+    var timeOptionsByDay = {
+      weekday: [
+        { value: 'Morning (8am - 12pm)', label: 'Morning (8am - 12pm)' },
+        { value: 'Morning (9:30am - 12pm)', label: 'Morning (9:30am - 12pm)' },
+        { value: 'Afternoon (12pm - 4pm)', label: 'Afternoon (12pm - 4pm)' },
+        { value: 'Evening (4pm - 5:30pm)', label: 'Evening (4pm - 5:30pm)' }
+      ],
+      saturday: [
+        { value: 'Morning (9am - 12pm)', label: 'Morning (9am - 12pm)' },
+        { value: 'Afternoon (12pm - 3pm)', label: 'Afternoon (12pm - 3pm)' },
+        { value: 'By Appointment Only', label: 'By Appointment Only' }
+      ],
+      weekend: [
+        { value: 'By Appointment Only', label: 'By Appointment Only' },
+        { value: 'Closed', label: 'Closed' }
+      ]
+    };
+
+    function updateTimeOptions() {
+      if (!daySelect || !timeSelect) return;
+      var selectedDay = daySelect.value;
+      var optionsList = timeOptionsByDay.weekday;
+
+      if (selectedDay === 'Saturday') {
+        optionsList = timeOptionsByDay.saturday;
+      } else if (selectedDay === 'Sundays' || selectedDay === 'Statutory Holidays') {
+        optionsList = timeOptionsByDay.weekend;
+      }
+
+      var currentVal = timeSelect.value;
+      timeSelect.innerHTML = '';
+      var hasMatch = false;
+
+      optionsList.forEach(function (opt) {
+        var optEl = document.createElement('option');
+        optEl.value = opt.value;
+        optEl.textContent = opt.label;
+        if (opt.value === currentVal) {
+          optEl.selected = true;
+          hasMatch = true;
+        }
+        timeSelect.appendChild(optEl);
+      });
+
+      if (!hasMatch && optionsList.length > 0) {
+        timeSelect.selectedIndex = 0;
+      }
+    }
+
+    if (daySelect) {
+      daySelect.addEventListener('change', updateTimeOptions);
+      updateTimeOptions();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Request Appointment Form",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "micro_title",
+      "label": "Micro Title (Eyebrow)",
+      "default": "Book Your Visit"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Request An Appointment"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Please complete the form below to request an appointment. Our patient coordinator will contact you to confirm.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Request Appointment"
+    },
+    {
+      "type": "header",
+      "content": "Confirmation Messages"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Success Heading",
+      "default": "Request Received!"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Thank you! Your appointment request has been submitted. Our team will contact you shortly to confirm your booking."
+    },
+    {
+      "type": "header",
+      "content": "Appearance & Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background Color Class",
+      "options": [
+        { "value": "", "label": "Default" },
+        { "value": "bg-color-white", "label": "White" },
+        { "value": "bg-color-black", "label": "Black" },
+        { "value": "bg-color-grey", "label": "Grey" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color Class",
+      "options": [
+        { "value": "", "label": "Default" },
+        { "value": "text-color-white", "label": "White" },
+        { "value": "text-color-black", "label": "Black" },
+        { "value": "text-color-grey", "label": "Grey" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom Background Color"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "Custom Text Color"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Request Appointment Form",
+      "settings": {
+        "micro_title": "Book Your Visit",
+        "heading": "Request An Appointment",
+        "subheading": "<p>Please complete the form below to request an appointment. Our patient coordinator will contact you to confirm.</p>",
+        "button_label": "Request Appointment"
+      }
+    }
+  ]
+}
+{% endschema %}

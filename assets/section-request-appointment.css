@@ -1,0 +1,444 @@
+/* ==========================================================================
+   Request Appointment Section & Form
+   ========================================================================== */
+
+.request-appointment {
+  position: relative;
+  width: 100%;
+}
+
+.request-appointment .container {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.request-appointment .section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 3.5rem;
+  width: 100%;
+}
+
+.request-appointment .section-header.ta-c {
+  text-align: center;
+  align-items: center;
+}
+
+.request-appointment .section-header .micro {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0;
+  color: inherit;
+  opacity: 0.85;
+  line-height: 1.3;
+}
+
+.request-appointment .section-header .lvl-2,
+.request-appointment .section-header h2 {
+  font-size: clamp(2.4rem, 3.5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: inherit;
+  word-break: break-word;
+}
+
+.request-appointment .section-header-description {
+  font-size: 1.6rem;
+  line-height: 1.6;
+  max-width: 680px;
+  margin: 0.5rem auto 0;
+  opacity: 0.85;
+}
+
+/* Form Card Container */
+.appointment-form-wrapper {
+  background: var(--gradient-background, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+}
+
+@media screen and (min-width: 750px) {
+  .appointment-form-wrapper {
+    padding: 4.5rem 4rem;
+  }
+}
+
+/* Status Notifications */
+.form-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.6rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2.5rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+.form-status-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.form-status--success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.form-status--success .form-status-icon {
+  color: #22c55e;
+}
+
+.form-status--error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.form-status--error .form-status-icon {
+  color: #ef4444;
+}
+
+.form-status__title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+  color: inherit;
+}
+
+.form-status__message {
+  margin: 0;
+  color: inherit;
+}
+
+.form-status__list {
+  margin: 0.5rem 0 0 1.5rem;
+  padding: 0;
+}
+
+/* Form Layout Grid */
+.appointment-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 2.2rem;
+  margin-left: -1.2rem;
+  margin-right: -1.2rem;
+}
+
+.form-col {
+  padding: 0 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-col--half {
+  width: 100%;
+}
+
+.form-col--third {
+  width: 100%;
+}
+
+.form-col--two-thirds {
+  width: 100%;
+}
+
+@media screen and (min-width: 750px) {
+  .form-col--half {
+    width: 50%;
+  }
+
+  .form-col--third {
+    width: 35%;
+  }
+
+  .form-col--two-thirds {
+    width: 65%;
+  }
+}
+
+/* Form Labels & Legends */
+.form-label,
+fieldset.form-group legend.form-label {
+  display: block;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+}
+
+.form-label .required,
+fieldset.form-group legend .required {
+  color: #dc2626;
+  font-weight: 700;
+  margin-left: 0.2rem;
+}
+
+/* Inputs, Selects, Textareas */
+.appointment-input,
+.appointment-select,
+.appointment-textarea {
+  width: 100%;
+  height: 4.8rem;
+  padding: 0 1.6rem;
+  font-size: 1.5rem;
+  font-family: inherit;
+  color: #111827;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.appointment-input::placeholder,
+.appointment-textarea::placeholder {
+  color: #9ca3af;
+  font-size: 1.5rem;
+}
+
+.appointment-input:hover,
+.appointment-select:hover,
+.appointment-textarea:hover {
+  border-color: #9ca3af;
+}
+
+.appointment-input:focus,
+.appointment-select:focus,
+.appointment-textarea:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.12);
+  background-color: #ffffff;
+}
+
+/* Select Dropdown Styling */
+.appointment-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.appointment-select {
+  padding-right: 4rem;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.appointment-select-chevron {
+  position: absolute;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+/* Textarea */
+.appointment-textarea {
+  height: auto;
+  min-height: 12rem;
+  padding: 1.4rem 1.6rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Fieldset and Radio Options */
+fieldset.form-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointment-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.4rem;
+  margin-top: 0.4rem;
+}
+
+.appointment-radio-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.45rem;
+  color: #374151;
+  font-weight: 500;
+  padding: 0.6rem 0;
+}
+
+.appointment-radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.appointment-radio-custom {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  margin-right: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.appointment-radio-custom::after {
+  content: "";
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.appointment-radio-option:hover .appointment-radio-custom {
+  border-color: #6b7280;
+}
+
+.appointment-radio-option input[type="radio"]:focus-visible + .appointment-radio-custom {
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.15);
+}
+
+.appointment-radio-option input[type="radio"]:checked + .appointment-radio-custom {
+  border-color: #111827;
+  background-color: #111827;
+}
+
+.appointment-radio-option input[type="radio"]:checked + .appointment-radio-custom::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* If Other Conditional Field */
+.appointment-other-field {
+  transition: all 0.3s ease;
+}
+
+.appointment-other-field[aria-hidden="true"] {
+  display: none;
+}
+
+/* Honeypot field (hidden from users, traps bots) */
+.appointment-honeypot {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Submit Button & Actions */
+.appointment-form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.appointment-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.4rem 4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: var(--color-button, #111111);
+  color: var(--color-button-text, #ffffff);
+  border: 2px solid var(--color-button, #111111);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s ease;
+  min-width: 240px;
+}
+
+.appointment-submit-btn:hover {
+  background-color: #2b2b2b;
+  border-color: #2b2b2b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.appointment-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Dark or Custom Section Background Variations */
+.request-appointment.bg-color-black .appointment-form-wrapper {
+  background: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+}
+
+.request-appointment.bg-color-black .form-label,
+.request-appointment.bg-color-black fieldset.form-group legend.form-label,
+.request-appointment.bg-color-black .appointment-radio-option {
+  color: #f3f4f6;
+}
+
+.request-appointment.bg-color-black .appointment-input,
+.request-appointment.bg-color-black .appointment-select,
+.request-appointment.bg-color-black .appointment-textarea {
+  background-color: #2a2a2a;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.request-appointment.bg-color-black .appointment-radio-custom {
+  background-color: #2a2a2a;
+  border-color: #4b5563;
+}
+
+.request-appointment.bg-color-black .appointment-radio-option input[type="radio"]:checked + .appointment-radio-custom {
+  border-color: #ffffff;
+  background-color: #ffffff;
+}
+
+.request-appointment.bg-color-black .appointment-radio-option input[type="radio"]:checked + .appointment-radio-custom::after {
+  background-color: #111827;
+}
+
+.request-appointment.bg-color-black .appointment-submit-btn {
+  background-color: #ffffff;
+  color: #111111;
+  border-color: #ffffff;
+}
+
+.request-appointment.bg-color-black .appointment-submit-btn:hover {
+  background-color: #e5e7eb;
+  border-color: #e5e7eb;
+}

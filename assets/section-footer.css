@@ -161,6 +161,10 @@ footer.site-footer .footer-shop-name {
 }
 
 /* Contact Info */
+footer.site-footer .footer_contact_info {
+  display: flex;
+  flex-direction: column;
+}
 footer.site-footer .footer_contact_info .contact-info {
   display: flex;
   flex-direction: column;
