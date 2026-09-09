@@ -624,29 +624,41 @@ a.product__text {
 .product-media-modal__dialog {
   display: flex;
   align-items: center;
+  position: relative;
   height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .product-media-modal__content {
+  position: relative;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
   max-height: 100vh;
-  width: 100%;
-  overflow: auto;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 !important;
+  margin: 0 !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.product-media-modal__content > *:not(.active),
+.product-media-modal__content::-webkit-scrollbar {
+  display: none;
+}
+
 .product__media-list .deferred-media {
   display: none;
 }
 
 @media screen and (min-width: 750px) {
-  .product-media-modal__content {
-    padding-bottom: 2rem;
-  }
-
-  .product-media-modal__content > *:not(.active) {
-    display: block;
-  }
-
   .product__modal-opener:not(.product__modal-opener--image) {
     display: none;
   }
@@ -669,10 +681,32 @@ a.product__text {
   }
 }
 
+/* Modal Slides */
 .product-media-modal__content > * {
-  display: block;
-  height: auto;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 100vw !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 6rem 8rem !important;
+}
+
+.product-media-modal__content > img {
+  max-height: calc(100vh - 12rem) !important;
+  max-width: calc(100vw - 16rem) !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
   margin: auto;
+  border-radius: var(--media-radius, 4px);
+  user-select: none;
 }
 
 .product-media-modal__content .media {
@@ -681,8 +715,100 @@ a.product__text {
 
 .product-media-modal__model {
   width: 100%;
+  max-width: calc(100vw - 16rem);
 }
 
+.product-media-modal__content .deferred-media {
+  width: 100%;
+  max-width: calc(100vw - 16rem);
+}
+
+/* Navigation Buttons (Prev & Next) */
+.product-media-modal__nav-button {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.product-media-modal__nav-button--prev {
+  left: 2rem;
+}
+
+.product-media-modal__nav-button--next {
+  right: 2rem;
+}
+
+.product-media-modal__nav-button .svg-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-media-modal__nav-button .icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.product-media-modal__nav-button--prev .icon {
+  transform: rotate(90deg);
+}
+
+.product-media-modal__nav-button--next .icon {
+  transform: rotate(-90deg);
+}
+
+.product-media-modal__nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.88);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.product-media-modal__nav-button:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+/* Slide Counter Badge */
+.product-media-modal__counter {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.6rem;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 3rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Modal Close Toggle Button */
 .product-media-modal__toggle {
   background-color: rgb(var(--color-background));
   border: 0.1rem solid rgba(var(--color-foreground), 0.1);
@@ -695,49 +821,56 @@ a.product__text {
   right: 2rem;
   padding: 1.2rem;
   position: fixed;
-  z-index: 2;
+  z-index: 5;
   top: 2rem;
-  width: 4rem;
-}
-
-.product-media-modal__content .deferred-media {
-  width: 100%;
+  width: 4.4rem;
+  height: 4.4rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 @media screen and (min-width: 750px) {
-  .product-media-modal__content {
-    padding: 2rem 11rem;
-  }
-
-  .product-media-modal__content > * {
-    width: 100%;
-  }
-
-  .product-media-modal__content > * + * {
-    margin-top: 2rem;
-  }
-
   .product-media-modal__toggle {
-    right: 5rem;
-    top: 2.2rem;
+    right: 4rem;
+    top: 2.5rem;
+  }
+
+  .product-media-modal__nav-button--prev {
+    left: 3rem;
+  }
+
+  .product-media-modal__nav-button--next {
+    right: 3rem;
   }
 }
 
-@media screen and (min-width: 990px) {
-  .product-media-modal__content {
-    padding: 2rem 11rem;
+@media screen and (max-width: 749px) {
+  .product-media-modal__content > * {
+    padding: 5rem 1.5rem 4.5rem !important;
   }
 
-  .product-media-modal__content > * + * {
-    margin-top: 1.5rem;
+  .product-media-modal__content > img {
+    max-height: calc(100vh - 10rem) !important;
+    max-width: calc(100vw - 3rem) !important;
   }
 
-  .product-media-modal__content {
-    padding-bottom: 1.5rem;
+  .product-media-modal__nav-button {
+    width: 4rem;
+    height: 4rem;
   }
 
-  .product-media-modal__toggle {
-    right: 5rem;
+  .product-media-modal__nav-button--prev {
+    left: 1rem;
+  }
+
+  .product-media-modal__nav-button--next {
+    right: 1rem;
+  }
+
+  .product-media-modal__counter {
+    bottom: 1.8rem;
+    font-size: 1.2rem;
+    padding: 0.4rem 1.2rem;
   }
 }
 

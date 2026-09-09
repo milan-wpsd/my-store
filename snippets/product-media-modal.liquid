@@ -1,5 +1,5 @@
 {% comment %}
-  Renders a product media modal. Also see 'product-media-gallery'
+  Renders a product media modal with a slider. Also see 'product-media-gallery'
 
   Accepts:
   - product: {Object} Product liquid object
@@ -25,6 +25,34 @@
     >
       {{ 'icon-close.svg' | inline_asset_content }}
     </button>
+
+    <button
+      type="button"
+      class="product-media-modal__nav-button product-media-modal__nav-button--prev"
+      name="previous"
+      aria-label="{{ 'general.slider.previous_slide' | t }}"
+    >
+      <span class="svg-wrapper">
+        {{- 'icon-caret.svg' | inline_asset_content -}}
+      </span>
+    </button>
+
+    <button
+      type="button"
+      class="product-media-modal__nav-button product-media-modal__nav-button--next"
+      name="next"
+      aria-label="{{ 'general.slider.next_slide' | t }}"
+    >
+      <span class="svg-wrapper">
+        {{- 'icon-caret.svg' | inline_asset_content -}}
+      </span>
+    </button>
+
+    <div class="product-media-modal__counter" aria-live="polite">
+      <span class="product-media-modal__counter-current">1</span>
+      <span aria-hidden="true"> / </span>
+      <span class="product-media-modal__counter-total">1</span>
+    </div>
 
     <div
       class="product-media-modal__content color-{{ section.settings.color_scheme }} gradient"

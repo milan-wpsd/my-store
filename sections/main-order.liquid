@@ -14,312 +14,428 @@
   }
 {%- endstyle -%}
 
-<div class="customer order section-{{ section.id }}-padding">
-  <div>
-    <h1 class="customer__title">{{ 'customer.account.title' | t }}</h1>
-    <a href="{{ routes.account_url }}">{{ 'customer.account.return' | t }}</a>
-  </div>
+<div class="customer-order-page section-{{ section.id }}-padding">
+  <div class="order-container">
+    <!-- Top Actions / Return -->
+    <div class="order-topbar">
+      <a href="{{ routes.account_url }}" class="order-back-btn">
+        <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>{{ 'customer.account.return' | t }}</span>
+      </a>
+      <div class="order-topbar__actions">
+        <button type="button" class="order-action-btn order-action-btn--print" onclick="window.print()">
+          <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Print Receipt</span>
+        </button>
+      </div>
+    </div>
 
-  <div>
-    <div>
-      <h2>{{ 'customer.order.title' | t: name: order.name }}</h2>
-      {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
-      <p>{{ 'customer.order.date_html' | t: date: order_date }}</p>
-      {%- if order.cancelled -%}
-        {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
-        <p>{{ 'customer.order.cancelled_html' | t: date: cancelled_at }}</p>
-        <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
-      {%- endif -%}
+    <!-- Order Hero Card -->
+    <div class="order-hero-card">
+      <div class="order-hero-card__meta">
+        <span class="order-hero-card__tag">Order Details</span>
+        <h1 class="order-hero-card__title">{{ 'customer.order.title' | t: name: order.name }}</h1>
+        {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
+        <p class="order-hero-card__date">
+          <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>{{ 'customer.order.date_html' | t: date: order_date }}</span>
+        </p>
+      </div>
+      <div class="order-hero-card__statuses">
+        <div class="status-pill status-pill--{{ order.financial_status }}">
+          <span class="status-pill__dot"></span>
+          <span class="status-pill__label">Payment: {{ order.financial_status_label }}</span>
+        </div>
+        <div class="status-pill status-pill--{{ order.fulfillment_status | default: 'unfulfilled' }}">
+          <span class="status-pill__dot"></span>
+          <span class="status-pill__label">Fulfillment: {{ order.fulfillment_status_label }}</span>
+        </div>
+      </div>
+    </div>
 
-      <table role="table" class="order-details">
-        <caption class="visually-hidden">
-          {{ 'customer.order.title' | t: name: order.name }}
-        </caption>
-        <thead role="rowgroup">
-          <tr role="row">
-            <th id="ColumnProduct" scope="col" role="columnheader">{{ 'customer.order.product' | t }}</th>
-            <th id="ColumnSku" scope="col" role="columnheader">{{ 'customer.order.sku' | t }}</th>
-            <th id="ColumnPrice" scope="col" role="columnheader">{{ 'customer.order.price' | t }}</th>
-            <th id="ColumnQuantity" scope="col" role="columnheader">{{ 'customer.order.quantity' | t }}</th>
-            <th id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.order.total' | t }}</th>
-          </tr>
-        </thead>
-        <tbody role="rowgroup">
-          {%- for line_item in order.line_items -%}
-            <tr role="row">
-              <td
-                id="Row{{ line_item.key }}"
-                headers="ColumnProduct"
-                role="rowheader"
-                scope="row"
-                data-label="{{ 'customer.order.product' | t }}"
-              >
-                <div>
-                  {%- if line_item.url != blank -%}
-                    <a href="{{ line_item.url }}">{{ line_item.title | escape }}</a>
+    <!-- Cancelled Order Banner (if cancelled) -->
+    {%- if order.cancelled -%}
+      {%- assign cancelled_at = order.cancelled_at | time_tag: format: 'date_at_time' -%}
+      <div class="order-cancelled-banner">
+        <div class="order-cancelled-banner__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <div class="order-cancelled-banner__text">
+          <strong>{{ 'customer.order.cancelled_html' | t: date: cancelled_at }}</strong>
+          <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
+        </div>
+      </div>
+    {%- else -%}
+      <!-- Visual Order Progress Stepper -->
+      <div class="order-stepper-card">
+        <div class="order-stepper">
+          <!-- Step 1: Placed -->
+          <div class="order-step is-complete">
+            <div class="order-step__icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="order-step__label">
+              <span class="order-step__title">Order Placed</span>
+              <span class="order-step__sub">{{ order.created_at | time_tag: format: 'date' }}</span>
+            </div>
+          </div>
+
+          <div class="order-stepper__line {% if order.financial_status == 'paid' or order.financial_status == 'authorized' %}is-complete{% endif %}"></div>
+
+          <!-- Step 2: Payment Confirmed -->
+          {%- assign is_paid = false -%}
+          {%- if order.financial_status == 'paid' or order.financial_status == 'authorized' -%}
+            {%- assign is_paid = true -%}
+          {%- endif -%}
+          <div class="order-step {% if is_paid %}is-complete{% else %}is-active{% endif %}">
+            <div class="order-step__icon">
+              {%- if is_paid -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- else -%}
+                <span class="order-step__number">2</span>
+              {%- endif -%}
+            </div>
+            <div class="order-step__label">
+              <span class="order-step__title">Payment</span>
+              <span class="order-step__sub">{{ order.financial_status_label }}</span>
+            </div>
+          </div>
+
+          <div class="order-stepper__line {% if order.fulfillment_status == 'fulfilled' or order.fulfillment_status == 'partially_fulfilled' %}is-complete{% endif %}"></div>
+
+          <!-- Step 3: Dispatched -->
+          {%- assign is_shipped = false -%}
+          {%- if order.fulfillment_status == 'fulfilled' or order.fulfillment_status == 'partially_fulfilled' -%}
+            {%- assign is_shipped = true -%}
+          {%- endif -%}
+          <div class="order-step {% if is_shipped %}is-complete{% elsif is_paid %}is-active{% endif %}">
+            <div class="order-step__icon">
+              {%- if is_shipped -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- else -%}
+                <span class="order-step__number">3</span>
+              {%- endif -%}
+            </div>
+            <div class="order-step__label">
+              <span class="order-step__title">Dispatched</span>
+              <span class="order-step__sub">
+                {%- if is_shipped -%}
+                  In Transit
+                {%- else -%}
+                  Processing
+                {%- endif -%}
+              </span>
+            </div>
+          </div>
+
+          <div class="order-stepper__line {% if order.fulfillment_status == 'fulfilled' %}is-complete{% endif %}"></div>
+
+          <!-- Step 4: Delivered -->
+          <div class="order-step {% if order.fulfillment_status == 'fulfilled' %}is-complete{% endif %}">
+            <div class="order-step__icon">
+              {%- if order.fulfillment_status == 'fulfilled' -%}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- else -%}
+                <span class="order-step__number">4</span>
+              {%- endif -%}
+            </div>
+            <div class="order-step__label">
+              <span class="order-step__title">Delivered</span>
+              <span class="order-step__sub">
+                {%- if order.fulfillment_status == 'fulfilled' -%}
+                  Completed
+                {%- else -%}
+                  Pending
+                {%- endif -%}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <!-- Main Content Layout (Items + Sidebar) -->
+    <div class="order-layout">
+      <!-- Left Column: Products List -->
+      <div class="order-layout__main">
+        <div class="order-items-card">
+          <div class="order-items-card__header">
+            <h2 class="order-items-card__title">
+              {{ 'customer.order.product' | t }}
+              <span class="order-items-card__count">{{ order.line_items.size }}</span>
+            </h2>
+          </div>
+
+          <div class="order-items-list">
+            {%- for line_item in order.line_items -%}
+              <div class="order-item-card">
+                <div class="order-item-card__media">
+                  {%- if line_item.image -%}
+                    {{ line_item.image | image_url: width: 240 | image_tag: loading: 'lazy', class: 'order-item-card__image' }}
                   {%- else -%}
-                    <p>{{ line_item.title | escape }}</p>
-                  {%- endif -%}
-                  {%- assign property_size = line_item.properties | size -%}
-                  {%- unless line_item.selling_plan_allocation == null and property_size == 0 -%}
-                    <div class="properties">
-                      {%- unless line_item.product.has_only_default_variant -%}
-                        <span>
-                          {{ line_item.variant.title | escape }}
-                        </span>
-                      {%- endunless -%}
-                      {%- unless line_item.selling_plan_allocation == null -%}
-                        <span>
-                          {{ line_item.selling_plan_allocation.selling_plan.name }}
-                        </span>
-                      {%- endunless -%}
-                      {%- if property_size != 0 -%}
-                        {%- for property in line_item.properties -%}
-                          {% assign property_first_char = property.first | slice: 0 %}
-                          {%- if property.last != blank and property_first_char != '_' -%}
-                            <span>{{ property.first }}:</span>
-                            <span>
-                              {%- if property.last contains '/uploads/' -%}
-                                <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
-                              {%- else -%}
-                                {{ property.last }}
-                              {%- endif -%}
-                            </span>
-                          {%- endif -%}
-                        {%- endfor -%}
-                      {%- endif -%}
-                    </div>
-                  {%- endunless -%}
-
-                  {%- if line_item.line_level_discount_allocations != blank -%}
-                    <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                      {%- for discount_allocation in line_item.line_level_discount_allocations -%}
-                        <li>
-                          <span class="svg-wrapper">
-                            {{- 'icon-discount.svg' | inline_asset_content -}}
-                          </span>
-                          {{- discount_allocation.discount_application.title | escape }} (-
-                          {{- discount_allocation.amount | money -}}
-                          )
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  {%- endif -%}
-
-                  {%- if line_item.fulfillment -%}
-                    <div class="fulfillment">
-                      {%- assign created_at = line_item.fulfillment.created_at | time_tag: format: 'date' -%}
-                      <span>{{ 'customer.order.fulfilled_at_html' | t: date: created_at }}</span>
-
-                      {%- if line_item.fulfillment.tracking_url -%}
-                        <a href="{{ line_item.fulfillment.tracking_url }}">
-                          {{ 'customer.order.track_shipment' | t }}
-                        </a>
-                      {%- endif -%}
-                      <span>
-                        {{ line_item.fulfillment.tracking_company }}
-                        {%- if line_item.fulfillment.tracking_number -%}
-                          #{{ line_item.fulfillment.tracking_number }}
-                        {%- endif -%}
-                      </span>
+                    <div class="order-item-card__placeholder">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
                     </div>
                   {%- endif -%}
                 </div>
-              </td>
-              <td
-                headers="Row{{ line_item.key }} ColumnSku"
-                role="cell"
-                data-label="{{ 'customer.order.sku' | t }}"
-              >
-                {{ line_item.sku }}
-              </td>
-              <td
-                headers="Row{{ line_item.key }} ColumnPrice"
-                role="cell"
-                data-label="{{ 'customer.order.price' | t }}"
-              >
-                {%- if line_item.original_price != line_item.final_price or line_item.unit_price_measurement -%}
-                  <dl>
-                    {%- if line_item.original_price != line_item.final_price -%}
-                      <dt>
-                        <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                      </dt>
-                      <dd class="regular-price">
-                        <s>{{ line_item.original_price | money }}</s>
-                      </dd>
-                      <dt>
-                        <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
-                      </dt>
-                      <dd>
-                        <span>{{ line_item.final_price | money }}</span>
-                      </dd>
+
+                <div class="order-item-card__body">
+                  <div class="order-item-card__details">
+                    {%- if line_item.url != blank -%}
+                      <a href="{{ line_item.url }}" class="order-item-card__product-title">{{ line_item.title | escape }}</a>
                     {%- else -%}
-                      <dt>
-                        <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                      </dt>
-                      <dd>
-                        {{ line_item.original_price | money }}
-                      </dd>
+                      <span class="order-item-card__product-title">{{ line_item.title | escape }}</span>
                     {%- endif -%}
-                    {%- if line_item.unit_price_measurement -%}
-                      <dt>
-                        <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
-                      </dt>
-                      <dd class="unit-price">
-                        {% render 'unit-price', price: line_item.unit_price, measurement: line_item.unit_price_measurement, hide_accessibility_label: true %}
-                      </dd>
+
+                    <div class="order-item-card__meta">
+                      {%- unless line_item.product.has_only_default_variant -%}
+                        <span class="order-item-tag order-item-tag--variant">{{ line_item.variant.title | escape }}</span>
+                      {%- endunless -%}
+
+                      {%- if line_item.sku != blank -%}
+                        <span class="order-item-tag order-item-tag--sku">SKU: {{ line_item.sku }}</span>
+                      {%- endif -%}
+
+                      {%- unless line_item.selling_plan_allocation == null -%}
+                        <span class="order-item-tag order-item-tag--plan">{{ line_item.selling_plan_allocation.selling_plan.name }}</span>
+                      {%- endunless -%}
+                    </div>
+
+                    {%- assign property_size = line_item.properties | size -%}
+                    {%- if property_size > 0 -%}
+                      <div class="order-item-card__properties">
+                        {%- for property in line_item.properties -%}
+                          {% assign property_first_char = property.first | slice: 0 %}
+                          {%- if property.last != blank and property_first_char != '_' -%}
+                            <div class="order-item-property">
+                              <span class="order-item-property__name">{{ property.first }}:</span>
+                              <span class="order-item-property__value">
+                                {%- if property.last contains '/uploads/' -%}
+                                  <a href="{{ property.last }}" target="_blank">{{ property.last | split: '/' | last }}</a>
+                                {%- else -%}
+                                  {{ property.last }}
+                                {%- endif -%}
+                              </span>
+                            </div>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
                     {%- endif -%}
-                  </dl>
-                {%- else -%}
-                  <span>{{ line_item.final_price | money }}</span>
+
+                    {%- if line_item.line_level_discount_allocations != blank -%}
+                      <div class="order-item-card__discounts">
+                        {%- for discount_allocation in line_item.line_level_discount_allocations -%}
+                          <span class="discount-pill">
+                            <span class="svg-wrapper">
+                              {{- 'icon-discount.svg' | inline_asset_content -}}
+                            </span>
+                            {{ discount_allocation.discount_application.title | escape }} (-{{ discount_allocation.amount | money }})
+                          </span>
+                        {%- endfor -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="order-item-card__pricing">
+                    <div class="order-item-card__total-price">
+                      {%- if line_item.original_line_price != line_item.final_line_price -%}
+                        <s class="order-item-card__old-price">{{ line_item.original_line_price | money }}</s>
+                        <span class="order-item-card__current-price">{{ line_item.final_line_price | money }}</span>
+                      {%- else -%}
+                        <span class="order-item-card__current-price">{{ line_item.original_line_price | money }}</span>
+                      {%- endif -%}
+                    </div>
+                    <div class="order-item-card__unit-info">
+                      <span>{{ line_item.final_price | money }} × {{ line_item.quantity }}</span>
+                      {%- if line_item.unit_price_measurement -%}
+                        <span class="order-item-card__unit-price">
+                          {% render 'unit-price', price: line_item.unit_price, measurement: line_item.unit_price_measurement, hide_accessibility_label: true %}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+
+                {%- if line_item.fulfillment -%}
+                  <div class="order-item-card__tracking-bar">
+                    <div class="order-item-card__tracking-info">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                      </svg>
+                      <div>
+                        {%- assign fulfilled_at = line_item.fulfillment.created_at | time_tag: format: 'date' -%}
+                        <span class="tracking-date">{{ 'customer.order.fulfilled_at_html' | t: date: fulfilled_at }}</span>
+                        <span class="tracking-carrier">
+                          {{ line_item.fulfillment.tracking_company }}
+                          {%- if line_item.fulfillment.tracking_number -%}
+                            &bull; #{{ line_item.fulfillment.tracking_number }}
+                          {%- endif -%}
+                        </span>
+                      </div>
+                    </div>
+                    {%- if line_item.fulfillment.tracking_url -%}
+                      <a href="{{ line_item.fulfillment.tracking_url }}" target="_blank" class="order-tracking-btn">
+                        <span>{{ 'customer.order.track_shipment' | t }}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="7" y1="17" x2="17" y2="7"></line>
+                          <polyline points="7 7 17 7 17 17"></polyline>
+                        </svg>
+                      </a>
+                    {%- endif -%}
+                  </div>
                 {%- endif -%}
-              </td>
-              <td
-                headers="Row{{ line_item.key }} ColumnQuantity"
-                role="cell"
-                data-label="{{ 'customer.order.quantity' | t }}"
-              >
-                {{ line_item.quantity }}
-              </td>
-              <td
-                headers="Row{{ line_item.key }} ColumnTotal"
-                role="cell"
-                data-label="{{ 'customer.order.total' | t }}"
-              >
-                {%- if line_item.original_line_price != line_item.final_line_price -%}
-                  <dl>
-                    <dt>
-                      <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                    </dt>
-                    <dd class="regular-price">
-                      <s>{{ line_item.original_line_price | money }}</s>
-                    </dd>
-                    <dt>
-                      <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
-                    </dt>
-                    <dd>
-                      <span>{{ line_item.final_line_price | money }}</span>
-                    </dd>
-                  </dl>
-                {%- else -%}
-                  {{ line_item.original_line_price | money }}
-                {%- endif -%}
-              </td>
-            </tr>
-          {%- endfor -%}
-        </tbody>
-        <tfoot role="rowgroup">
-          <tr role="row">
-            <td id="RowSubtotal" role="rowheader" scope="row" colspan="4">
-              {{ 'customer.order.subtotal' | t }}
-            </td>
-            <td headers="RowSubtotal" role="cell" data-label="{{ 'customer.order.subtotal' | t }}">
-              {{ order.line_items_subtotal_price | money }}
-            </td>
-          </tr>
-          {%- if order.cart_level_discount_applications != blank -%}
-            <tr role="row">
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Summary & Addresses Sidebar -->
+      <div class="order-layout__sidebar">
+        <!-- Order Summary Receipt Card -->
+        <div class="order-summary-card">
+          <div class="order-summary-card__header">
+            <h2 class="order-summary-card__title">Order Summary</h2>
+          </div>
+
+          <div class="order-summary-card__body">
+            <div class="summary-row">
+              <span class="summary-row__label">{{ 'customer.order.subtotal' | t }}</span>
+              <span class="summary-row__value">{{ order.line_items_subtotal_price | money }}</span>
+            </div>
+
+            {%- if order.cart_level_discount_applications != blank -%}
               {%- for discount_application in order.cart_level_discount_applications -%}
-                <td id="RowDiscount" role="rowheader" scope="row" colspan="4">
-                  {{ 'customer.order.discount' | t }}
-                  <span class="cart-discount">
+                <div class="summary-row summary-row--discount">
+                  <span class="summary-row__label">
                     <span class="svg-wrapper">
                       {{- 'icon-discount.svg' | inline_asset_content -}}
                     </span>
-                    {{- discount_application.title | escape -}}
+                    {{ discount_application.title | escape }}
                   </span>
-                </td>
-                <td headers="RowDiscount" role="cell" data-label="{{ 'customer.order.discount' | t }}">
-                  <div>
-                    <span>-{{ discount_application.total_allocated_amount | money }}</span>
-                    <span class="cart-discount">
-                      <span class="svg-wrapper">
-                        {{- 'icon-discount.svg' | inline_asset_content -}}
-                      </span>
-                      {{- discount_application.title | escape -}}
-                    </span>
-                  </div>
-                </td>
+                  <span class="summary-row__value">-{{ discount_application.total_allocated_amount | money }}</span>
+                </div>
               {%- endfor -%}
-            </tr>
-          {%- endif -%}
-          {%- for shipping_method in order.shipping_methods -%}
-            <tr role="row">
-              <td id="RowShipping" role="rowheader" scope="row" colspan="4">
-                {{ 'customer.order.shipping' | t }} ({{ shipping_method.title | escape }})
-              </td>
-              <td
-                headers="RowShipping"
-                role="cell"
-                data-label="{{ 'customer.order.shipping' | t }} ({{ shipping_method.title | escape }})"
-              >
-                {{ shipping_method.price | money }}
-              </td>
-            </tr>
-          {%- endfor -%}
-          {%- for tax_line in order.tax_lines -%}
-            <tr role="row">
-              <td id="RowTax" role="rowheader" scope="row" colspan="4">
-                {{ 'customer.order.tax' | t }} ({{ tax_line.title | escape }}
-                {{ tax_line.rate | times: 100 }}%)
-              </td>
-              <td
-                headers="RowTax"
-                role="cell"
-                data-label="{{ 'customer.order.tax' | t }} ({{ tax_line.title | escape }} {{ tax_line.rate | times: 100 }}%)"
-              >
-                {{ tax_line.price | money }}
-              </td>
-            </tr>
-          {%- endfor -%}
-          {%- if order.total_duties -%}
-            <tr role="row">
-              <td id="RowDuties" role="rowheader" scope="row" colspan="4">{{ 'customer.order.total_duties' | t }}</td>
-              <td headers="RowDuties" role="cell" data-label="{{ 'customer.order.total_duties' | t }}">
-                {{ order.total_duties | money }}
-              </td>
-            </tr>
-          {%- endif -%}
-          {%- if order.total_refunded_amount > 0 -%}
-            <tr role="row">
-              <td id="RowTotalRefund" role="rowheader" scope="row" colspan="3">
-                {{ 'customer.order.total_refunded' | t }}
-              </td>
-              <td
-                headers="RowTotalRefund"
-                role="cell"
-                colspan="2"
-                data-label="{{ 'customer.order.total_refunded' | t }}"
-              >
-                -{{ order.total_refunded_amount | money_with_currency }}
-              </td>
-            </tr>
-          {%- endif -%}
-          <tr role="row">
-            <td id="RowTotal" role="rowheader" scope="row" colspan="3">{{ 'customer.order.total' | t }}</td>
-            <td headers="RowTotal" role="cell" colspan="2" data-label="{{ 'customer.order.total' | t }}">
-              {{ order.total_net_amount | money_with_currency }}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <div>
-      <div>
-        <h2>{{ 'customer.order.billing_address' | t }}</h2>
-        <p>
-          <strong>{{ 'customer.order.payment_status' | t }}:</strong>
-          {{ order.financial_status_label }}
-        </p>
-        {{ order.billing_address | format_address }}
-      </div>
-      <div>
-        <h2>{{ 'customer.order.shipping_address' | t }}</h2>
-        <p>
-          <strong>{{ 'customer.order.fulfillment_status' | t }}:</strong>
-          {{ order.fulfillment_status_label }}
-        </p>
-        {{ order.shipping_address | format_address }}
+            {%- endif -%}
+
+            {%- for shipping_method in order.shipping_methods -%}
+              <div class="summary-row">
+                <span class="summary-row__label">{{ 'customer.order.shipping' | t }} ({{ shipping_method.title | escape }})</span>
+                <span class="summary-row__value">{{ shipping_method.price | money }}</span>
+              </div>
+            {%- endfor -%}
+
+            {%- for tax_line in order.tax_lines -%}
+              <div class="summary-row">
+                <span class="summary-row__label">{{ 'customer.order.tax' | t }} ({{ tax_line.title | escape }} {{ tax_line.rate | times: 100 }}%)</span>
+                <span class="summary-row__value">{{ tax_line.price | money }}</span>
+              </div>
+            {%- endfor -%}
+
+            {%- if order.total_duties -%}
+              <div class="summary-row">
+                <span class="summary-row__label">{{ 'customer.order.total_duties' | t }}</span>
+                <span class="summary-row__value">{{ order.total_duties | money }}</span>
+              </div>
+            {%- endif -%}
+
+            {%- if order.total_refunded_amount > 0 -%}
+              <div class="summary-row summary-row--refund">
+                <span class="summary-row__label">{{ 'customer.order.total_refunded' | t }}</span>
+                <span class="summary-row__value">-{{ order.total_refunded_amount | money_with_currency }}</span>
+              </div>
+            {%- endif -%}
+
+            <div class="summary-row summary-row--grand-total">
+              <span class="summary-row__label">{{ 'customer.order.total' | t }}</span>
+              <span class="summary-row__value">{{ order.total_net_amount | money_with_currency }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Addresses Card (Shipping & Billing) -->
+        <div class="order-details-card">
+          <div class="order-details-card__block">
+            <div class="order-details-card__header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <h3>{{ 'customer.order.shipping_address' | t }}</h3>
+            </div>
+            <div class="order-details-card__content">
+              {%- if order.shipping_address -%}
+                {{ order.shipping_address | format_address }}
+              {%- else -%}
+                <p>No shipping address provided.</p>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="order-details-card__divider"></div>
+
+          <div class="order-details-card__block">
+            <div class="order-details-card__header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              <h3>{{ 'customer.order.billing_address' | t }}</h3>
+            </div>
+            <div class="order-details-card__content">
+              {%- if order.billing_address -%}
+                {{ order.billing_address | format_address }}
+              {%- else -%}
+                <p>No billing address provided.</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        <!-- Need Help Card -->
+        <div class="order-help-card">
+          <div class="order-help-card__header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <h3>Need Assistance?</h3>
+          </div>
+          <p>Have questions regarding your order, delivery status, or returns?</p>
+          <a href="mailto:{{ shop.email }}" class="order-help-btn">Contact Store Support</a>
+        </div>
       </div>
     </div>
   </div>
