@@ -1,0 +1,165 @@
+{{ 'section-core-value.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #core-value-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% if section.settings.custom_bg_color != blank and section.settings.custom_bg_color != 'rgba(0,0,0,0)' %}
+      background-color: {{ section.settings.custom_bg_color }};
+    {% endif %}
+    {% if section.settings.custom_text_color != blank and section.settings.custom_text_color != 'rgba(0,0,0,0)' %}
+      color: {{ section.settings.custom_text_color }};
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #core-value-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="core-value-{{ section.id }}" class="core-value {{ section.settings.background_color }} {{ section.settings.text_color }}">
+    <div class="container c-w-1350">
+        {% for block in section.blocks %}
+            <div class="core-value-item" {{ block.shopify_attributes }}>
+                <div class="core-value-item-icon">
+                    {% if block.settings.icon != blank %}
+                        {{ block.settings.icon | image_url: width: 64 | image_tag: loading: 'lazy' }}
+                    {% endif %}
+                </div>
+                <div class="core-value-item-content">
+                    {% if block.settings.title != blank %}
+                        <h3 class="core-value-item-title">{{ block.settings.title | escape }}</h3>
+                    {% endif %}
+                    {% if block.settings.description != blank %}
+                        <div class="core-value-item-description rte">{{ block.settings.description }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Core Value",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "core_value_item",
+      "name": "Core Value Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Core Value"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Description for this core value.</p>"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background Color",
+      "options": [
+        { "value": "", "label": "None" },
+        { "value": "bg-color-white", "label": "White" },
+        { "value": "bg-color-black", "label": "Black" },
+        { "value": "bg-color-grey", "label": "Grey" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        { "value": "", "label": "None" },
+        { "value": "text-color-white", "label": "White" },
+        { "value": "text-color-black", "label": "Black" },
+        { "value": "text-color-grey", "label": "Grey" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "color",
+      "id": "custom_bg_color",
+      "label": "Custom Background Color"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "Custom Text Color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Core Value",
+      "blocks": [
+        {
+          "type": "core_value_item",
+          "settings": {
+            "title": "Core Value 1",
+            "description": "<p>Description for core value 1</p>"
+          }
+        },
+        {
+          "type": "core_value_item",
+          "settings": {
+            "title": "Core Value 2",
+            "description": "<p>Description for core value 2</p>"
+          }
+        },
+        {
+          "type": "core_value_item",
+          "settings": {
+            "title": "Core Value 3",
+            "description": "<p>Description for core value 3</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
